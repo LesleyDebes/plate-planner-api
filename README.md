@@ -12,4 +12,5 @@ I'm developing this API to harden my skills with the following technologies:
 - Spring Cache [with EHCache]
 - Maven
 - Testing with jUnit and Mockito
+- Documentation via Swagger and Javadoc
 - Java 8 (new java.time library, functional programming via lambdas, etc)
