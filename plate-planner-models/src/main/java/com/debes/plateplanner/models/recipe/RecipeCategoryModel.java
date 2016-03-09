@@ -1,9 +1,11 @@
 package com.debes.plateplanner.models.recipe;
 
+import com.debes.plateplanner.models.BaseModel;
+
 /**
  * @author lesley.debes
  */
-public class RecipeCategoryModel {
+public class RecipeCategoryModel extends BaseModel {
     //TODO:  ADD VALIDATION
     private Integer idRecipeCategory;
     private String recipeCategory;

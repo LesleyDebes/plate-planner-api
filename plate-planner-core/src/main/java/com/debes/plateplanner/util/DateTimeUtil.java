@@ -6,13 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
- * Description here.
- *
  * @author lesley.debes
  */
 public class DateTimeUtil {
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mm:ss a", Locale.US);
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mm:ss a", Locale.US);
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US);
 
     public static String format(LocalDateTime localDateTime) {

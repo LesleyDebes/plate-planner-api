@@ -18,11 +18,6 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @RequestMapping(value = "/category/list", method = RequestMethod.GET)
-    public RecipeCategoryListModel getRecipeCategories() {
-        return recipeService.getRecipeCategoryList();
-    }
-
     @RequestMapping(value = "/upsert", method = RequestMethod.POST)
     public RecipeModel upsertRecipe(RecipeModel recipeModel) {
         return recipeService.upsertRecipe(recipeModel);
@@ -33,7 +28,7 @@ public class RecipeController {
         return recipeService.getRecipe(idRecipe);
     }
 
-    @RequestMapping(value = "/{idRecipe}/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public RecipeListModel getRecipeList() {
         return recipeService.getRecipeList();
     }
@@ -67,4 +62,25 @@ public class RecipeController {
     public RecipeIngredientListModel getRecipeIngredients(@PathVariable Integer idRecipe) {
         return recipeService.getRecipeIngredientList(idRecipe);
     }
+
+    @RequestMapping(value = "/{idRecipe}/category/{idCategory}/add", method = RequestMethod.POST)
+    public BaseModel addRecipeCategory(@PathVariable Integer idRecipe, @PathVariable Integer idCategory) {
+        return recipeService.addRecipeCategory(idRecipe, idCategory);
+    }
+
+    @RequestMapping(value = "/{idRecipe}/category/{idCategory}/remove", method = RequestMethod.POST)
+    public BaseModel removeRecipeCategory(@PathVariable Integer idRecipe, @PathVariable Integer idCategory) {
+        return recipeService.removeRecipeCategory(idRecipe, idCategory);
+    }
+
+    @RequestMapping(value = "/{idRecipe}/category/list", method = RequestMethod.GET)
+    public RecipeCategoryListModel getRecipeCategoriesByRecipe(@PathVariable Integer idRecipe) {
+        return recipeService.getRecipeCategoryList(idRecipe);
+    }
+
+    @RequestMapping(value = "/category/list", method = RequestMethod.GET)
+    public RecipeCategoryListModel getRecipeCategories() {
+        return recipeService.getRecipeCategoryList();
+    }
+
 }

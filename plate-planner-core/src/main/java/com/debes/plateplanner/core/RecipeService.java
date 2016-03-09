@@ -1,9 +1,8 @@
 package com.debes.plateplanner.core;
 
-import com.debes.plateplanner.dao.recipe.Recipe;
-import com.debes.plateplanner.dao.recipe.RecipeCategory;
-import com.debes.plateplanner.dao.recipe.RecipeIngredient;
+import com.debes.plateplanner.dao.recipe.*;
 import com.debes.plateplanner.dao.recipe.repository.RecipeCategoryRepository;
+import com.debes.plateplanner.dao.recipe.repository.RecipeHasCategoryRepository;
 import com.debes.plateplanner.dao.recipe.repository.RecipeIngredientRepository;
 import com.debes.plateplanner.dao.recipe.repository.RecipeRepository;
 import com.debes.plateplanner.models.BaseModel;
@@ -32,42 +31,10 @@ public class RecipeService {
     private RecipeCategoryRepository recipeCategoryRepository;
 
     @Autowired
+    private RecipeHasCategoryRepository recipeHasCategoryRepository;
+
+    @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
-
-    public RecipeCategoryListModel getRecipeCategoryList() {
-        RecipeCategoryListModel recipeCategoryListModel = new RecipeCategoryListModel();
-        try {
-            List<RecipeCategory> recipeCategoryList = recipeCategoryRepository.findAllByOrderByOrderSequence();
-            if (CollectionUtils.isNotEmpty(recipeCategoryList)) {
-                List<RecipeCategoryModel> recipeCategoryModelList = new ArrayList<>();
-                for (RecipeCategory recipeCategory : recipeCategoryList) {
-                    RecipeCategoryModel recipeCategoryModel = new RecipeCategoryModel();
-                    recipeCategoryModel.setIdRecipeCategory(recipeCategory.getIdRecipeCategory());
-                    recipeCategoryModel.setRecipeCategory(recipeCategory.getRecipeCategory());
-                    recipeCategoryModel.setOrderSequence(recipeCategory.getOrderSequence());
-                    recipeCategoryModel.setCreateTimestamp(DateTimeUtil.format(recipeCategory.getCreateTimestamp().toLocalDateTime()));
-                    if (null != recipeCategory.getUpdateTimestamp()) {
-                        recipeCategoryModel.setUpdateTimestamp(DateTimeUtil.format(recipeCategory.getUpdateTimestamp().toLocalDateTime()));
-                    }
-                    recipeCategoryModelList.add(recipeCategoryModel);
-                }
-                recipeCategoryListModel.setRecipeCategoryList(recipeCategoryModelList);
-                recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
-            } else {
-                //TODO:  HOW TO THROW NO DATA FOUND EXCEPTION
-                recipeCategoryListModel.setRecipeCategoryList(new ArrayList<>());
-                recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-                recipeCategoryListModel.setMessage("There was an error retrieving recipe categories");
-            }
-        } catch (Exception e) {
-            recipeCategoryListModel.setRecipeCategoryList(new ArrayList<>());
-            recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            recipeCategoryListModel.setMessage("There was an error retrieving recipe categories");
-            //TODO:  LOGGER STATEMENT
-        }
-
-        return recipeCategoryListModel;
-    }
 
     @Transactional
     public RecipeModel upsertRecipe(RecipeModel recipeModel) {
@@ -105,7 +72,9 @@ public class RecipeService {
             recipeModel.setIdRecipe(recipe.getIdRecipe());
             recipeModel.setRecipeName(recipe.getRecipeName());
             recipeModel.setRecipeSource(recipe.getRecipeSource());
-            recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
+            if (recipe.getCreateTimestamp() != null) {
+                recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
+            }
             if (recipe.getUpdateTimestamp() != null) {
                 recipeModel.setUpdateTimestamp(DateTimeUtil.format(recipe.getUpdateTimestamp().toLocalDateTime()));
             }
@@ -128,11 +97,13 @@ public class RecipeService {
                     recipeModel.setIdRecipe(recipe.getIdRecipe());
                     recipeModel.setRecipeName(recipe.getRecipeName());
                     recipeModel.setRecipeSource(recipe.getRecipeSource());
-                    recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
-                    if (recipe.getUpdateTimestamp() != null) {
-                        recipeModel.setUpdateTimestamp(DateTimeUtil.format(recipe.getUpdateTimestamp()
-                                .toLocalDateTime()));
+                    if (recipe.getCreateTimestamp() != null) {
+                        recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
                     }
+                    if (recipe.getUpdateTimestamp() != null) {
+                        recipeModel.setUpdateTimestamp(DateTimeUtil.format(recipe.getUpdateTimestamp().toLocalDateTime()));
+                    }
+                    recipeModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
                     recipeModelList.add(recipeModel);
                 }
                 recipeListModel.setRecipeModelList(recipeModelList);
@@ -258,6 +229,82 @@ public class RecipeService {
             recipeIngredientListModel.setMessage("There was an error retrieving ingredients for the recipe");
         }
         return recipeIngredientListModel;
+    }
+
+    public RecipeCategoryListModel getRecipeCategoryList(Integer idRecipe) {
+        //TODO: Implement
+        return new RecipeCategoryListModel();
+    }
+
+    public RecipeCategoryListModel getRecipeCategoryList() {
+        RecipeCategoryListModel recipeCategoryListModel = new RecipeCategoryListModel();
+        try {
+            List<RecipeCategory> recipeCategoryList = recipeCategoryRepository.findAllByOrderByOrderSequence();
+            if (CollectionUtils.isNotEmpty(recipeCategoryList)) {
+                List<RecipeCategoryModel> recipeCategoryModelList = new ArrayList<>();
+                for (RecipeCategory recipeCategory : recipeCategoryList) {
+                    RecipeCategoryModel recipeCategoryModel = new RecipeCategoryModel();
+                    recipeCategoryModel.setIdRecipeCategory(recipeCategory.getIdRecipeCategory());
+                    recipeCategoryModel.setRecipeCategory(recipeCategory.getRecipeCategory());
+                    recipeCategoryModel.setOrderSequence(recipeCategory.getOrderSequence());
+                    if (recipeCategory.getCreateTimestamp() != null) {
+                        recipeCategoryModel.setCreateTimestamp(DateTimeUtil.format(recipeCategory.getCreateTimestamp
+                                ().toLocalDateTime()));
+                    }
+                    if (recipeCategory.getUpdateTimestamp() != null) {
+                        recipeCategoryModel.setUpdateTimestamp(DateTimeUtil.format(recipeCategory.getUpdateTimestamp
+                                ().toLocalDateTime()));
+                    }
+                    recipeCategoryModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+                    recipeCategoryModelList.add(recipeCategoryModel);
+                }
+                recipeCategoryListModel.setRecipeCategoryList(recipeCategoryModelList);
+                recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+            } else {
+                //TODO:  HOW TO THROW NO DATA FOUND EXCEPTION
+                recipeCategoryListModel.setRecipeCategoryList(new ArrayList<>());
+                recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+                recipeCategoryListModel.setMessage("There was an error retrieving recipe categories");
+            }
+        } catch (Exception e) {
+            recipeCategoryListModel.setRecipeCategoryList(new ArrayList<>());
+            recipeCategoryListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            recipeCategoryListModel.setMessage("There was an error retrieving recipe categories");
+            //TODO:  LOGGER STATEMENT
+        }
+
+        return recipeCategoryListModel;
+    }
+
+    public BaseModel addRecipeCategory(Integer idRecipe, Integer idRecipeCategory) {
+        BaseModel baseModel = new BaseModel();
+        try {
+            RecipeHasCategory recipeHasCategory = new RecipeHasCategory();
+            recipeHasCategory.setIdRecipe(idRecipe);
+            recipeHasCategory.setIdRecipeCategory(idRecipeCategory);
+            recipeHasCategory.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+            recipeHasCategoryRepository.save(recipeHasCategory);
+            baseModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+        } catch (Exception e) {
+            baseModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            baseModel.setMessage("There was an error adding the category to the recipe");
+        }
+        return baseModel;
+    }
+
+    public BaseModel removeRecipeCategory(Integer idRecipe, Integer idRecipeCategory) {
+        BaseModel baseModel = new BaseModel();
+        try {
+            RecipeHasCategoryPK recipeHasCategoryPK = new RecipeHasCategoryPK();
+            recipeHasCategoryPK.setIdRecipe(idRecipe);
+            recipeHasCategoryPK.setIdRecipeCategory(idRecipeCategory);
+            recipeHasCategoryRepository.delete(recipeHasCategoryPK);
+            baseModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+        } catch (Exception e) {
+            baseModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            baseModel.setMessage("There was an error removing the category from the recipe");
+        }
+        return baseModel;
     }
 
 }

@@ -7,6 +7,7 @@ import com.debes.plateplanner.dao.meal.MealType;
 import com.debes.plateplanner.dao.meal.repository.MealRepository;
 import com.debes.plateplanner.dao.meal.repository.MealTypeRepository;
 import com.debes.plateplanner.models.BaseModel;
+import com.debes.plateplanner.models.dish.DishListModel;
 import com.debes.plateplanner.models.dish.DishModel;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
 import com.debes.plateplanner.models.meal.MealModel;
@@ -46,10 +47,14 @@ public class MealService {
             Meal meal = mealRepository.findOne(idMeal);
             mealModel.setIdMeal(meal.getIdMeal());
             mealModel.setMealName(meal.getMealName());
-            mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
+            if (meal.getMealDate() != null) {
+                mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
+            }
             mealModel.setIdMealType(meal.getIdMealType());
             mealModel.setOrderSequence(meal.getOrderSequence());
-            mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
+            if (meal.getCreateTimestamp() != null) {
+                mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
+            }
             if (meal.getUpdateTimestamp() != null) {
                 mealModel.setUpdateTimestamp(DateTimeUtil.format(meal.getUpdateTimestamp().toLocalDateTime()));
             }
@@ -139,12 +144,12 @@ public class MealService {
     public DishModel addDish(Integer idMeal, DishModel dishModel) {
         try {
             Dish dish = new Dish();
-            dish.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
             dish.setIdMeal(idMeal);
             dish.setDishName(dishModel.getDishName());
             dish.setIdDishType(dishModel.getIdDishType());
             dish.setIdRecipe(dishModel.getIdRecipe());
             dish.setOrderSequence(dishModel.getOrderSequence());
+            dish.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
             dish = dishRepository.save(dish);
             if (dish != null && dish.getIdDish() != null) {
                 dishModel.setIdDish(dish.getIdDish());
@@ -168,10 +173,93 @@ public class MealService {
             baseModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
             baseModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            baseModel.setMessage("There was an error removing meal: " + idMeal);
+            baseModel.setMessage("There was an error removing dish: " + idDish);
         }
         return baseModel;
     }
 
+    @Transactional
+    public DishModel updateDish(Integer idMeal, DishModel dishModel) {
+        try {
+            Dish dish = dishRepository.findByIdMealAndIdDish(idMeal, dishModel.getIdDish());
+            dish.setDishName(dishModel.getDishName());
+            dish.setIdDishType(dishModel.getIdDishType());
+            dish.setIdRecipe(dishModel.getIdRecipe());
+            dish.setOrderSequence(dishModel.getOrderSequence());
+            dish.setUpdateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+            dish = dishRepository.save(dish);
+            if (dish != null && dish.getIdDish() != null) {
+                dishModel.setIdDish(dish.getIdDish());
+                dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+            }
+        } catch (Exception e) {
+            dishModel.setIdDish(null);
+            dishModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            dishModel.setMessage("There was an error updating dish");
+            //TODO:  LOGGER STATEMENT
+        }
+        return dishModel;
+    }
 
+    public DishModel getDish(Integer idMeal, Integer idDish) {
+        DishModel dishModel = new DishModel();
+        try {
+            Dish dish = dishRepository.findByIdMealAndIdDish(idMeal, idDish);
+            dishModel.setIdMeal(dish.getIdMeal());
+            dishModel.setIdRecipe(dish.getIdRecipe());
+            dishModel.setOrderSequence(dish.getOrderSequence());
+            if (dishModel.getCreateTimestamp() != null) {
+                dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
+            }
+            dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
+            if (dish.getUpdateTimestamp() != null) {
+                dishModel.setUpdateTimestamp(DateTimeUtil.format(dish.getUpdateTimestamp().toLocalDateTime()));
+            }
+            dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+        } catch (Exception e) {
+            dishModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            dishModel.setMessage("There was an error retrieving dish: " + idDish);
+        }
+        return dishModel;
+    }
+
+    public DishListModel getDishList(Integer idMeal) {
+        DishListModel dishListModel = new DishListModel();
+        try {
+            List<Dish> dishList = dishRepository.findByIdMealOrderByOrderSequenceDesc(idMeal);
+            if (CollectionUtils.isNotEmpty(dishList)) {
+                //TODO:  Use Lambdas?
+                List<DishModel> dishModelList = new ArrayList<>();
+                for (Dish dish : dishList) {
+                    DishModel dishModel = new DishModel();
+                    dishModel.setIdMeal(dish.getIdMeal());
+                    dishModel.setIdDish(dish.getIdDish());
+                    dishModel.setIdRecipe(dish.getIdRecipe());
+                    dishModel.setDishName(dish.getDishName());
+                    dishModel.setIdDishType(dish.getIdDishType());
+                    dishModel.setOrderSequence(dish.getOrderSequence());
+                    if (dish.getCreateTimestamp() != null) {
+                        dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
+                    }
+                    if (dish.getUpdateTimestamp() != null) {
+                        dishModel.setUpdateTimestamp(DateTimeUtil.format(dish.getUpdateTimestamp().toLocalDateTime()));
+                    }
+                    dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+                    dishModelList.add(dishModel);
+                }
+                dishListModel.setDishModelList(dishModelList);
+                dishListModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+            } else {
+                //TODO:  HOW TO THROW NO DATA FOUND EXCEPTION
+                dishListModel.setDishModelList(new ArrayList<>());
+                dishListModel.setMessage("There was an error retrieving dish list");
+            }
+        } catch (Exception e) {
+            dishListModel.setDishModelList(new ArrayList<>());
+            dishListModel.setMessage("There was an error retrieving dish list");
+            //TODO:  LOGGER STATEMENT
+        }
+
+        return dishListModel;
+    }
 }

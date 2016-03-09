@@ -3,6 +3,7 @@ package com.debes.plateplanner.core;
 import com.debes.plateplanner.models.BaseModel;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
 import com.debes.plateplanner.models.recipe.RecipeCategoryListModel;
+import com.debes.plateplanner.models.recipe.RecipeListModel;
 import com.debes.plateplanner.models.recipe.RecipeModel;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author lesley.debes
@@ -49,7 +51,6 @@ public class RecipeServiceTest {
 
     @Test
     @Transactional
-    //@Ignore("Local debugging only")
     public void test_upsertRecipe() {
         RecipeModel recipeModel = new RecipeModel();
         recipeModel.setRecipeName("Lasagna");
@@ -84,5 +85,15 @@ public class RecipeServiceTest {
         BaseModel baseModel = recipeService.removeRecipe(3);
         assertNotNull(baseModel);
         assertEquals(ModelStatusEnum.SUCCESS, baseModel.getModelStatusEnum());
+    }
+
+    @Test
+    public void test_getRecipeList() {
+        RecipeListModel recipeListModel = recipeService.getRecipeList();
+        assertNotNull(recipeListModel);
+        assertTrue(CollectionUtils.isNotEmpty(recipeListModel.getRecipeModelList()));
+        assertEquals(ModelStatusEnum.SUCCESS, recipeListModel.getModelStatusEnum());
+        assertTrue(recipeListModel.getRecipeModelList().stream().allMatch(
+                recipe -> recipe.getModelStatusEnum().isSuccessful()));
     }
 }
