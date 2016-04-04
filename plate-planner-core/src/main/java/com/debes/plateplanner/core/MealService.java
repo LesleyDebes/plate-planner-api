@@ -11,7 +11,6 @@ import com.debes.plateplanner.models.meal.MealListModel;
 import com.debes.plateplanner.models.meal.MealModel;
 import com.debes.plateplanner.models.meal.MealTypeListModel;
 import com.debes.plateplanner.models.meal.MealTypeModel;
-import com.debes.plateplanner.util.DateTimeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,16 +43,12 @@ public class MealService {
             mealModel.setIdMeal(meal.getIdMeal());
             mealModel.setMealName(meal.getMealName());
             if (meal.getMealDate() != null) {
-                mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
+                mealModel.setMealDate(meal.getMealDate());
             }
             mealModel.setMealType(MealTypeEnum.get(meal.getIdMealType()));
             mealModel.setOrderSequence(meal.getOrderSequence());
-            if (meal.getCreateTimestamp() != null) {
-                mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
-            }
-            if (meal.getUpdateTimestamp() != null) {
-                mealModel.setUpdateTimestamp(DateTimeUtil.format(meal.getUpdateTimestamp().toLocalDateTime()));
-            }
+            mealModel.setCreateTimestamp(meal.getCreateTimestamp());
+            mealModel.setUpdateTimestamp(meal.getUpdateTimestamp());
             mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
             logger.error("There was an error retrieving meal with id {}: ", idMeal, e);
@@ -77,15 +71,9 @@ public class MealService {
                     mealModel.setMealName(meal.getMealName());
                     mealModel.setOrderSequence(meal.getOrderSequence());
                     mealModel.setMealType(MealTypeEnum.get(meal.getIdMealType()));
-                    if (meal.getMealDate() != null) {
-                        mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
-                    }
-                    if (meal.getCreateTimestamp() != null) {
-                        mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
-                    }
-                    if (meal.getUpdateTimestamp() != null) {
-                        mealModel.setUpdateTimestamp(DateTimeUtil.format(meal.getUpdateTimestamp().toLocalDateTime()));
-                    }
+                    mealModel.setMealDate(meal.getMealDate());
+                    mealModel.setCreateTimestamp(meal.getCreateTimestamp());
+                    mealModel.setUpdateTimestamp(meal.getUpdateTimestamp());
                     mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
                     mealModelList.add(mealModel);
                 }
@@ -149,7 +137,7 @@ public class MealService {
                 meal.setUpdateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
             }
             meal.setMealName(mealModel.getMealName());
-            meal.setMealDate(Date.valueOf(DateTimeUtil.parseDate(mealModel.getMealDate())));
+            meal.setMealDate(mealModel.getMealDate());
             meal.setIdMealType(mealModel.getMealType().getMealTypeValue());
             meal.setOrderSequence(mealModel.getOrderSequence());
             meal = mealRepository.save(meal);

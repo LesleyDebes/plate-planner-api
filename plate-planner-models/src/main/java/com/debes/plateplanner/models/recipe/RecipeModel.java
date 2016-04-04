@@ -2,6 +2,8 @@ package com.debes.plateplanner.models.recipe;
 
 import com.debes.plateplanner.models.BaseModel;
 
+import java.sql.Timestamp;
+
 /**
  * @author lesley.debes
  */
@@ -10,8 +12,8 @@ public class RecipeModel extends BaseModel {
     private Integer idRecipe;
     private String recipeName;
     private String recipeSource;
-    private String createTimestamp;
-    private String updateTimestamp;
+    private Timestamp createTimestamp;
+    private Timestamp updateTimestamp;
 
     public Integer getIdRecipe() {
         return idRecipe;
@@ -37,19 +39,19 @@ public class RecipeModel extends BaseModel {
         this.recipeSource = recipeSource;
     }
 
-    public String getCreateTimestamp() {
+    public Timestamp getCreateTimestamp() {
         return createTimestamp;
     }
 
-    public void setCreateTimestamp(String createTimestamp) {
+    public void setCreateTimestamp(Timestamp createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
-    public String getUpdateTimestamp() {
+    public Timestamp getUpdateTimestamp() {
         return updateTimestamp;
     }
 
-    public void setUpdateTimestamp(String updateTimestamp) {
+    public void setUpdateTimestamp(Timestamp updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 }

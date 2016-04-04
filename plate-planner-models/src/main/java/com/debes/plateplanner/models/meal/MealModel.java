@@ -2,6 +2,15 @@ package com.debes.plateplanner.models.meal;
 
 import com.debes.plateplanner.models.BaseModel;
 import com.debes.plateplanner.models.enums.MealTypeEnum;
+import com.debes.plateplanner.util.DateDeserializer;
+import com.debes.plateplanner.util.DateSerializer;
+import com.debes.plateplanner.util.TimestampDeserializer;
+import com.debes.plateplanner.util.TimestampSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * @author lesley.debes
@@ -11,10 +20,10 @@ public class MealModel extends BaseModel {
     private Integer idMeal;
     private MealTypeEnum mealType;
     private String mealName;
-    private String mealDate;
+    private Date mealDate;
     private short orderSequence;
-    private String createTimestamp;
-    private String updateTimestamp;
+    private Timestamp createTimestamp;
+    private Timestamp updateTimestamp;
 
     public Integer getIdMeal() {
         return idMeal;
@@ -40,11 +49,13 @@ public class MealModel extends BaseModel {
         this.mealName = mealName;
     }
 
-    public String getMealDate() {
+    @JsonSerialize(using = DateSerializer.class)
+    public Date getMealDate() {
         return mealDate;
     }
 
-    public void setMealDate(String mealDate) {
+    @JsonDeserialize(using = DateDeserializer.class)
+    public void setMealDate(Date mealDate) {
         this.mealDate = mealDate;
     }
 
@@ -56,19 +67,23 @@ public class MealModel extends BaseModel {
         this.orderSequence = orderSequence;
     }
 
-    public String getCreateTimestamp() {
+    @JsonSerialize(using = TimestampSerializer.class)
+    public Timestamp getCreateTimestamp() {
         return createTimestamp;
     }
 
-    public void setCreateTimestamp(String createTimestamp) {
+    @JsonDeserialize(using = TimestampDeserializer.class)
+    public void setCreateTimestamp(Timestamp createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
-    public String getUpdateTimestamp() {
+    @JsonSerialize(using = TimestampSerializer.class)
+    public Timestamp getUpdateTimestamp() {
         return updateTimestamp;
     }
 
-    public void setUpdateTimestamp(String updateTimestamp) {
+    @JsonDeserialize(using = TimestampDeserializer.class)
+    public void setUpdateTimestamp(Timestamp updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 }

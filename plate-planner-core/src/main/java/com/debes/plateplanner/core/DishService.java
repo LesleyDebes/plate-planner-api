@@ -11,7 +11,6 @@ import com.debes.plateplanner.models.dish.DishTypeListModel;
 import com.debes.plateplanner.models.dish.DishTypeModel;
 import com.debes.plateplanner.models.enums.DishTypeEnum;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
-import com.debes.plateplanner.util.DateTimeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -144,13 +143,8 @@ public class DishService {
             dishModel.setIdMeal(dish.getIdMeal());
             dishModel.setIdRecipe(dish.getIdRecipe());
             dishModel.setOrderSequence(dish.getOrderSequence());
-            if (dishModel.getCreateTimestamp() != null) {
-                dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
-            }
-            dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
-            if (dish.getUpdateTimestamp() != null) {
-                dishModel.setUpdateTimestamp(DateTimeUtil.format(dish.getUpdateTimestamp().toLocalDateTime()));
-            }
+            dishModel.setCreateTimestamp(dish.getCreateTimestamp());
+            dishModel.setUpdateTimestamp(dish.getUpdateTimestamp());
             dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
             logger.error("There was an error retrieving the dish ({}) for meal ({}): ", idDish, idMeal, e);
@@ -174,12 +168,8 @@ public class DishService {
                     dishModel.setDishName(dish.getDishName());
                     dishModel.setDishType(DishTypeEnum.get(dish.getIdDishType()));
                     dishModel.setOrderSequence(dish.getOrderSequence());
-                    if (dish.getCreateTimestamp() != null) {
-                        dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
-                    }
-                    if (dish.getUpdateTimestamp() != null) {
-                        dishModel.setUpdateTimestamp(DateTimeUtil.format(dish.getUpdateTimestamp().toLocalDateTime()));
-                    }
+                    dishModel.setCreateTimestamp(dish.getCreateTimestamp());
+                    dishModel.setUpdateTimestamp(dish.getUpdateTimestamp());
                     dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
                     dishModelList.add(dishModel);
                 }

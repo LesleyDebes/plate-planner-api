@@ -1,15 +1,16 @@
 package com.debes.plateplanner.core;
 
-import com.debes.plateplanner.dao.recipe.*;
-import com.debes.plateplanner.dao.recipe.repository.RecipeCategoryRepository;
-import com.debes.plateplanner.dao.recipe.repository.RecipeHasCategoryRepository;
+import com.debes.plateplanner.dao.recipe.Recipe;
+import com.debes.plateplanner.dao.recipe.RecipeIngredient;
 import com.debes.plateplanner.dao.recipe.repository.RecipeIngredientRepository;
 import com.debes.plateplanner.dao.recipe.repository.RecipeRepository;
 import com.debes.plateplanner.models.BaseModel;
 import com.debes.plateplanner.models.enums.MeasurementEnum;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
-import com.debes.plateplanner.models.recipe.*;
-import com.debes.plateplanner.util.DateTimeUtil;
+import com.debes.plateplanner.models.recipe.RecipeIngredientListModel;
+import com.debes.plateplanner.models.recipe.RecipeIngredientModel;
+import com.debes.plateplanner.models.recipe.RecipeListModel;
+import com.debes.plateplanner.models.recipe.RecipeModel;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +32,6 @@ public class RecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
-
-    @Autowired
-    private RecipeCategoryRepository recipeCategoryRepository;
-
-    @Autowired
-    private RecipeHasCategoryRepository recipeHasCategoryRepository;
 
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
@@ -77,12 +72,8 @@ public class RecipeService {
             recipeModel.setIdRecipe(recipe.getIdRecipe());
             recipeModel.setRecipeName(recipe.getRecipeName());
             recipeModel.setRecipeSource(recipe.getRecipeSource());
-            if (recipe.getCreateTimestamp() != null) {
-                recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
-            }
-            if (recipe.getUpdateTimestamp() != null) {
-                recipeModel.setUpdateTimestamp(DateTimeUtil.format(recipe.getUpdateTimestamp().toLocalDateTime()));
-            }
+            recipeModel.setCreateTimestamp(recipe.getCreateTimestamp());
+            recipeModel.setUpdateTimestamp(recipe.getUpdateTimestamp());
             recipeModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
             logger.error("There was an error retrieving the recipe: ", e);
@@ -103,12 +94,8 @@ public class RecipeService {
                     recipeModel.setIdRecipe(recipe.getIdRecipe());
                     recipeModel.setRecipeName(recipe.getRecipeName());
                     recipeModel.setRecipeSource(recipe.getRecipeSource());
-                    if (recipe.getCreateTimestamp() != null) {
-                        recipeModel.setCreateTimestamp(DateTimeUtil.format(recipe.getCreateTimestamp().toLocalDateTime()));
-                    }
-                    if (recipe.getUpdateTimestamp() != null) {
-                        recipeModel.setUpdateTimestamp(DateTimeUtil.format(recipe.getUpdateTimestamp().toLocalDateTime()));
-                    }
+                    recipeModel.setCreateTimestamp(recipe.getCreateTimestamp());
+                    recipeModel.setUpdateTimestamp(recipe.getUpdateTimestamp());
                     recipeModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
                     recipeModelList.add(recipeModel);
                 }

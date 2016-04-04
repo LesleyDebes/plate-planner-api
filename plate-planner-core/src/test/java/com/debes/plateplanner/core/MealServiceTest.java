@@ -1,8 +1,6 @@
 package com.debes.plateplanner.core;
 
 import com.debes.plateplanner.models.BaseModel;
-import com.debes.plateplanner.models.dish.DishModel;
-import com.debes.plateplanner.models.enums.DishTypeEnum;
 import com.debes.plateplanner.models.enums.MealTypeEnum;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
 import com.debes.plateplanner.models.meal.MealListModel;
@@ -18,6 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
@@ -36,7 +37,8 @@ public class MealServiceTest {
     public void test_upsertMeal_Success() {
         MealModel mealModel = new MealModel();
         mealModel.setMealName("Breakfast - Wednesday");
-        mealModel.setMealDate("April 6, 2016");
+        LocalDate localDate = LocalDate.of(2016, 4, 5);
+        mealModel.setMealDate(Date.valueOf(localDate));
         mealModel.setMealType(MealTypeEnum.BREAKFAST);
         mealModel.setOrderSequence((short)1);
 
@@ -97,7 +99,4 @@ public class MealServiceTest {
         assertEquals(ModelStatusEnum.SUCCESS, mealTypeListModel.getModelStatusEnum());
         assertEquals(3, CollectionUtils.size(mealTypeListModel.getMealTypeList()));
     }
-
-
-
 }

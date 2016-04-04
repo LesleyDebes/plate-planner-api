@@ -1,5 +1,8 @@
 package com.debes.plateplanner.dao.meal;
 
+import com.debes.plateplanner.util.DateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
