@@ -41,30 +41,6 @@ public class MealController {
         return mealService.removeMeal(idMeal);
     }
 
-    @RequestMapping(value = "/{idMeal}/dish/add", method = RequestMethod.POST)
-    public DishModel addDish(@PathVariable Integer idMeal, DishModel dishModel) {
-        return mealService.addDish(idMeal, dishModel);
-    }
-
-    @RequestMapping(value = "/{idMeal}/dish/{idDish}/remove", method = RequestMethod.DELETE)
-    public BaseModel removeDish(@PathVariable Integer idMeal, @PathVariable Integer idDish) {
-        return mealService.removeDish(idMeal, idDish);
-    }
-
-    @RequestMapping(value = "/{idMeal}/dish/update", method = RequestMethod.POST)
-    public DishModel updateDish(@PathVariable Integer idMeal, DishModel dishModel) {
-        return mealService.updateDish(idMeal, dishModel);
-    }
-
-    @RequestMapping(value = "/{idMeal}/dish/{idDish}", method = RequestMethod.GET)
-    public DishModel getDish(@PathVariable Integer idMeal, @PathVariable Integer idDish) {
-        return mealService.getDish(idMeal, idDish);
-    }
-
-    @RequestMapping(value = "/{idMeal}/dish/list", method = RequestMethod.GET)
-    public DishListModel getDishes(@PathVariable Integer idMeal) {
-        return mealService.getDishList(idMeal);
-    }
 
 
 }

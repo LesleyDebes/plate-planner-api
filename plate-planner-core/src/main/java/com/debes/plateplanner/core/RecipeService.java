@@ -146,10 +146,10 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeIngredientModel addIngredient(Integer idRecipe, RecipeIngredientModel ingredientModel) {
+    public RecipeIngredientModel addIngredient(RecipeIngredientModel ingredientModel) {
         try {
             RecipeIngredient recipeIngredient = new RecipeIngredient();
-            recipeIngredient.setIdRecipe(idRecipe);
+            recipeIngredient.setIdRecipe(ingredientModel.getIdRecipe());
             recipeIngredient.setIdMeasurement(ingredientModel.getMeasurement().getMeasurementValue());
             recipeIngredient.setIngredientMeasurementAmount(ingredientModel.getIngredientMeasurementAmount());
             recipeIngredient.setIngredientName(ingredientModel.getIngredientName());
@@ -158,7 +158,7 @@ public class RecipeService {
             ingredientModel.setIdRecipeIngredient(recipeIngredient.getIdRecipeIngredient());
             ingredientModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
-            logger.error("There was an error adding the ingredient to the recipe {}:", idRecipe, e);
+            logger.error("There was an error adding the ingredient to the recipe {}:", ingredientModel.getIdRecipe(), e);
             ingredientModel.setModelStatusEnum(ModelStatusEnum.ERROR);
             ingredientModel.setMessage("There was an error adding the ingredient.");
         }
@@ -166,10 +166,11 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeIngredientModel updateIngredient(Integer idRecipe, RecipeIngredientModel ingredientModel) {
+    public RecipeIngredientModel updateIngredient(RecipeIngredientModel ingredientModel) {
         try {
-            RecipeIngredient recipeIngredient = recipeIngredientRepository.findByIdRecipeAndIdRecipeIngredient(
-                    idRecipe, ingredientModel.getIdRecipeIngredient());
+            RecipeIngredient recipeIngredient =
+                    recipeIngredientRepository.findByIdRecipeAndIdRecipeIngredient(
+                    ingredientModel.getIdRecipe(), ingredientModel.getIdRecipeIngredient());
             recipeIngredient.setIdMeasurement(ingredientModel.getMeasurement().getMeasurementValue());
             recipeIngredient.setIngredientMeasurementAmount(ingredientModel.getIngredientMeasurementAmount());
             recipeIngredient.setIngredientName(ingredientModel.getIngredientName());
@@ -245,7 +246,7 @@ public class RecipeService {
         return recipeIngredientListModel;
     }
 
-    public RecipeCategoryListModel getRecipeCategoryList() {
+   /* public RecipeCategoryListModel getRecipeCategoryList() {
         RecipeCategoryListModel recipeCategoryListModel = new RecipeCategoryListModel();
         try {
             List<RecipeCategory> recipeCategoryList = recipeCategoryRepository.findAllByOrderByOrderSequence();
@@ -315,5 +316,5 @@ public class RecipeService {
             baseModel.setMessage("There was an error removing the category from the recipe.");
         }
         return baseModel;
-    }
+    }*/
 }

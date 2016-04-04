@@ -38,14 +38,14 @@ public class RecipeController {
         return recipeService.removeRecipe(idRecipe);
     }
 
-    @RequestMapping(value = "/{idRecipe}/ingredient/add", method = RequestMethod.POST)
-    public RecipeIngredientModel addRecipeIngredient(@PathVariable Integer idRecipe, RecipeIngredientModel recipeIngredientModel) {
-        return recipeService.addIngredient(idRecipe, recipeIngredientModel);
+    @RequestMapping(value = "/ingredient/add", method = RequestMethod.POST)
+    public RecipeIngredientModel addRecipeIngredient(RecipeIngredientModel recipeIngredientModel) {
+        return recipeService.addIngredient(recipeIngredientModel);
     }
 
-    @RequestMapping(value = "/{idRecipe}/ingredient/update", method = RequestMethod.POST)
-    public RecipeIngredientModel updateRecipeIngredient(@PathVariable Integer idRecipe, RecipeIngredientModel recipeIngredientModel) {
-        return recipeService.updateIngredient(idRecipe, recipeIngredientModel);
+    @RequestMapping(value = "/ingredient/update", method = RequestMethod.POST)
+    public RecipeIngredientModel updateRecipeIngredient(RecipeIngredientModel recipeIngredientModel) {
+        return recipeService.updateIngredient(recipeIngredientModel);
     }
 
     @RequestMapping(value = "/{idRecipe}/ingredient/{idIngredient}/remove", method = RequestMethod.DELETE)
@@ -63,7 +63,7 @@ public class RecipeController {
         return recipeService.getRecipeIngredientList(idRecipe);
     }
 
-    @RequestMapping(value = "/{idRecipe}/category/{idCategory}/add", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/{idRecipe}/category/{idCategory}/add", method = RequestMethod.POST)
     public BaseModel addRecipeCategory(@PathVariable Integer idRecipe, @PathVariable Integer idCategory) {
         return recipeService.addRecipeCategory(idRecipe, idCategory);
     }
@@ -73,14 +73,9 @@ public class RecipeController {
         return recipeService.removeRecipeCategory(idRecipe, idCategory);
     }
 
-    @RequestMapping(value = "/{idRecipe}/category/list", method = RequestMethod.GET)
-    public RecipeCategoryListModel getRecipeCategoriesByRecipe(@PathVariable Integer idRecipe) {
-        return recipeService.getRecipeCategoryList(idRecipe);
-    }
-
     @RequestMapping(value = "/category/list", method = RequestMethod.GET)
     public RecipeCategoryListModel getRecipeCategories() {
         return recipeService.getRecipeCategoryList();
     }
-
+*/
 }
