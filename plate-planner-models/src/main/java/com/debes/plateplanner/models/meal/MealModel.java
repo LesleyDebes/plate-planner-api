@@ -1,6 +1,7 @@
 package com.debes.plateplanner.models.meal;
 
 import com.debes.plateplanner.models.BaseModel;
+import com.debes.plateplanner.models.enums.MealTypeEnum;
 
 /**
  * @author lesley.debes
@@ -8,7 +9,7 @@ import com.debes.plateplanner.models.BaseModel;
 public class MealModel extends BaseModel {
     //TODO: ADD VALIDATION
     private Integer idMeal;
-    private String idMealType;
+    private MealTypeEnum mealType;
     private String mealName;
     private String mealDate;
     private short orderSequence;
@@ -23,12 +24,12 @@ public class MealModel extends BaseModel {
         this.idMeal = idMeal;
     }
 
-    public String getIdMealType() {
-        return idMealType;
+    public MealTypeEnum getMealType() {
+        return mealType;
     }
 
-    public void setIdMealType(String idMealType) {
-        this.idMealType = idMealType;
+    public void setMealType(MealTypeEnum mealType) {
+        this.mealType = mealType;
     }
 
     public String getMealName() {

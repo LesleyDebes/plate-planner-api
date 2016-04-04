@@ -10,4 +10,12 @@ import java.util.List;
 public class MeasurementListModel extends BaseModel {
     //TODO:  ADD VALIDATION
     List<MeasurementModel> measurementList;
+
+    public List<MeasurementModel> getMeasurementList() {
+        return measurementList;
+    }
+
+    public void setMeasurementList(List<MeasurementModel> measurementList) {
+        this.measurementList = measurementList;
+    }
 }

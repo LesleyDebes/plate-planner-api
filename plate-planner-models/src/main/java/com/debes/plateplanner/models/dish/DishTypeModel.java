@@ -1,25 +1,27 @@
 package com.debes.plateplanner.models.dish;
 
+import com.debes.plateplanner.models.enums.DishTypeEnum;
+
 /**
  * @author lesley.debes
  */
 public class DishTypeModel {
-    private String idDishType;
-    private String dishType;
+    private DishTypeEnum dishType;
+    private String dishTypeDescription;
 
-    public String getIdDishType() {
-        return idDishType;
-    }
-
-    public void setIdDishType(String idDishType) {
-        this.idDishType = idDishType;
-    }
-
-    public String getDishType() {
+    public DishTypeEnum getDishType() {
         return dishType;
     }
 
-    public void setDishType(String dishType) {
+    public void setDishType(DishTypeEnum dishType) {
         this.dishType = dishType;
+    }
+
+    public String getDishTypeDescription() {
+        return dishTypeDescription;
+    }
+
+    public void setDishTypeDescription(String dishTypeDescription) {
+        this.dishTypeDescription = dishTypeDescription;
     }
 }

@@ -6,7 +6,7 @@ I'm developing this API to harden my skills with the following technologies:
 
 - RESTful API with Spring MVC
 - Spring Data [with Hibernate]
-- Logback
+- Logback with SLF4J
 - Spring Validation [Java Validator (JSR-303)]
 - Spring Security
 - Spring Cache [with EHCache]

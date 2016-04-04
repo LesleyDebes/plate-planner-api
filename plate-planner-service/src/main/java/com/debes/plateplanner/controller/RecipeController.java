@@ -39,13 +39,13 @@ public class RecipeController {
     }
 
     @RequestMapping(value = "/{idRecipe}/ingredient/add", method = RequestMethod.POST)
-    public IngredientModel addRecipeIngredient(@PathVariable Integer idRecipe, IngredientModel ingredientModel) {
-        return recipeService.addIngredient(idRecipe, ingredientModel);
+    public RecipeIngredientModel addRecipeIngredient(@PathVariable Integer idRecipe, RecipeIngredientModel recipeIngredientModel) {
+        return recipeService.addIngredient(idRecipe, recipeIngredientModel);
     }
 
     @RequestMapping(value = "/{idRecipe}/ingredient/update", method = RequestMethod.POST)
-    public IngredientModel updateRecipeIngredient(@PathVariable Integer idRecipe, IngredientModel ingredientModel) {
-        return recipeService.updateIngredient(idRecipe, ingredientModel);
+    public RecipeIngredientModel updateRecipeIngredient(@PathVariable Integer idRecipe, RecipeIngredientModel recipeIngredientModel) {
+        return recipeService.updateIngredient(idRecipe, recipeIngredientModel);
     }
 
     @RequestMapping(value = "/{idRecipe}/ingredient/{idIngredient}/remove", method = RequestMethod.DELETE)

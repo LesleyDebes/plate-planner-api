@@ -22,9 +22,9 @@
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
           p:driverClassName="org.postgresql.Driver"
-          p:url="jdbc:postgresql://host:5432/plateplanner"
-          p:username=""
-          p:password="" />
+          p:url="jdbc:postgresql://beelzebozo.org:5432/plateplanner"
+          p:username="ppadmin"
+          p:password="C5?Lcqq2" />
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 

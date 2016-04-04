@@ -10,7 +10,7 @@ import java.util.List;
 public class RecipeIngredientListModel extends BaseModel {
     //TODO:  ADD VALIDATION
     private Integer idRecipe;
-    private List<IngredientModel> ingredientModelList;
+    private List<RecipeIngredientModel> ingredientModelList;
 
     public Integer getIdRecipe() {
         return idRecipe;
@@ -20,11 +20,11 @@ public class RecipeIngredientListModel extends BaseModel {
         this.idRecipe = idRecipe;
     }
 
-    public List<IngredientModel> getIngredientModelList() {
+    public List<RecipeIngredientModel> getIngredientModelList() {
         return ingredientModelList;
     }
 
-    public void setIngredientModelList(List<IngredientModel> ingredientModelList) {
+    public void setIngredientModelList(List<RecipeIngredientModel> ingredientModelList) {
         this.ingredientModelList = ingredientModelList;
     }
 }

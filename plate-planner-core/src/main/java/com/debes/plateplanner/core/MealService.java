@@ -9,12 +9,17 @@ import com.debes.plateplanner.dao.meal.repository.MealTypeRepository;
 import com.debes.plateplanner.models.BaseModel;
 import com.debes.plateplanner.models.dish.DishListModel;
 import com.debes.plateplanner.models.dish.DishModel;
+import com.debes.plateplanner.models.enums.DishTypeEnum;
+import com.debes.plateplanner.models.enums.MealTypeEnum;
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
+import com.debes.plateplanner.models.meal.MealListModel;
 import com.debes.plateplanner.models.meal.MealModel;
 import com.debes.plateplanner.models.meal.MealTypeListModel;
 import com.debes.plateplanner.models.meal.MealTypeModel;
 import com.debes.plateplanner.util.DateTimeUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +35,7 @@ import java.util.List;
  */
 @Service
 public class MealService {
-    //TODO:  ADD LOGGER
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private MealRepository mealRepository;
@@ -50,7 +55,7 @@ public class MealService {
             if (meal.getMealDate() != null) {
                 mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
             }
-            mealModel.setIdMealType(meal.getIdMealType());
+            mealModel.setMealType(MealTypeEnum.get(meal.getIdMealType()));
             mealModel.setOrderSequence(meal.getOrderSequence());
             if (meal.getCreateTimestamp() != null) {
                 mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
@@ -60,10 +65,51 @@ public class MealService {
             }
             mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
-            mealModel.setMessage("There was an error retrieving meal with id: " + idMeal);
-            //TODO:  LOGGER STATEMENT
+            logger.error("There was an error retrieving meal with id {}: ", idMeal, e);
+            mealModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            mealModel.setMessage("There was an error retrieving the meal.");
         }
         return mealModel;
+    }
+
+    public MealListModel getMeals() {
+        MealListModel mealListModel = new MealListModel();
+        List<Meal> mealList = mealRepository.findAll();
+        try {
+            if (CollectionUtils.isNotEmpty(mealList)) {
+                List<MealModel> mealModelList = new ArrayList<>();
+                for (Meal meal: mealList) {
+                    MealModel mealModel = new MealModel();
+                    mealModel.setIdMeal(meal.getIdMeal());
+                    mealModel.setMealName(meal.getMealName());
+                    mealModel.setOrderSequence(meal.getOrderSequence());
+                    mealModel.setMealType(MealTypeEnum.get(meal.getIdMealType()));
+                    if (meal.getMealDate() != null) {
+                        mealModel.setMealDate(DateTimeUtil.format(meal.getMealDate().toLocalDate()));
+                    }
+                    if (meal.getCreateTimestamp() != null) {
+                        mealModel.setCreateTimestamp(DateTimeUtil.format(meal.getCreateTimestamp().toLocalDateTime()));
+                    }
+                    if (meal.getUpdateTimestamp() != null) {
+                        mealModel.setUpdateTimestamp(DateTimeUtil.format(meal.getUpdateTimestamp().toLocalDateTime()));
+                    }
+                    mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+                    mealModelList.add(mealModel);
+                }
+                mealListModel.setMealList(mealModelList);
+            } else {
+                logger.error("No meals found.");
+                mealListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+                mealListModel.setMealList(new ArrayList<>());
+                mealListModel.setMessage("No meals found.");
+            }
+        } catch (Exception e) {
+            logger.error("There was an error retrieving the meals: ", e);
+            mealListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            mealListModel.setMealList(new ArrayList<>());
+            mealListModel.setMessage("There was an error retrieving the meals.");
+        }
+        return mealListModel;
     }
 
     public MealTypeListModel getMealTypes() {
@@ -71,27 +117,27 @@ public class MealService {
         try {
             List<MealType> mealTypeList = mealTypeRepository.findAllByOrderByOrderSequence();
             if (CollectionUtils.isNotEmpty(mealTypeList)) {
-                //TODO:  Use Lambdas?
                 List<MealTypeModel> mealTypeModelList = new ArrayList<>();
                 for (MealType mealType : mealTypeList) {
                     MealTypeModel mealTypeModel = new MealTypeModel();
-                    mealTypeModel.setIdMealType(mealType.getIdMealType());
-                    mealTypeModel.setMealType(mealType.getMealType());
+                    mealTypeModel.setMealType(MealTypeEnum.get(mealType.getIdMealType()));
+                    mealTypeModel.setMealTypeDescription(mealType.getMealType());
                     mealTypeModelList.add(mealTypeModel);
                 }
                 mealTypeListModel.setMealTypeList(mealTypeModelList);
                 mealTypeListModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             } else {
-                //TODO:  HOW TO THROW NO DATA FOUND EXCEPTION
+                logger.error("No meal types found.");
+                mealTypeListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
                 mealTypeListModel.setMealTypeList(new ArrayList<>());
-                mealTypeListModel.setMessage("There was an error retrieving meal types");
+                mealTypeListModel.setMessage("No meal types found.");
             }
         } catch (Exception e) {
+            logger.error("There was an error retrieving meal types: ", e);
+            mealTypeListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
             mealTypeListModel.setMealTypeList(new ArrayList<>());
-            mealTypeListModel.setMessage("There was an error retrieving meal types");
-            //TODO:  LOGGER STATEMENT
+            mealTypeListModel.setMessage("There was an error retrieving the list of meal types.");
         }
-
         return mealTypeListModel;
     }
 
@@ -110,7 +156,7 @@ public class MealService {
             }
             meal.setMealName(mealModel.getMealName());
             meal.setMealDate(Date.valueOf(DateTimeUtil.parseDate(mealModel.getMealDate())));
-            meal.setIdMealType(mealModel.getIdMealType());
+            meal.setIdMealType(mealModel.getMealType().getMealTypeValue());
             meal.setOrderSequence(mealModel.getOrderSequence());
             meal = mealRepository.save(meal);
             if (meal != null && meal.getIdMeal() != null) {
@@ -118,10 +164,10 @@ public class MealService {
                 mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             }
         } catch (Exception e) {
+            logger.error("There was an error upserting the meal: ", e);
             mealModel.setIdMeal(null);
             mealModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            mealModel.setMessage("There was an error upserting meal");
-            //TODO:  LOGGER STATEMENT
+            mealModel.setMessage("There was an error saving the meal.");
         }
         return mealModel;
     }
@@ -134,8 +180,9 @@ public class MealService {
             mealRepository.delete(idMeal);
             baseModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
+            logger.error("There was an error removing the meal with id {}: ", idMeal, e);
             baseModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            baseModel.setMessage("There was an error removing meal: " + idMeal);
+            baseModel.setMessage("There was an error removing the meal.");
         }
         return baseModel;
     }
@@ -146,7 +193,7 @@ public class MealService {
             Dish dish = new Dish();
             dish.setIdMeal(idMeal);
             dish.setDishName(dishModel.getDishName());
-            dish.setIdDishType(dishModel.getIdDishType());
+            dish.setIdDishType(dishModel.getDishType().getDishTypeValue());
             dish.setIdRecipe(dishModel.getIdRecipe());
             dish.setOrderSequence(dishModel.getOrderSequence());
             dish.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
@@ -156,10 +203,10 @@ public class MealService {
                 dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             }
         } catch (Exception e) {
+            logger.error("There was an error adding the dish to the meal with id {}: ", idMeal, e);
             dishModel.setIdDish(null);
             dishModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            dishModel.setMessage("There was an error adding dish to the meal");
-            //TODO:  LOGGER STATEMENT
+            dishModel.setMessage("There was an error adding dish to the meal.");
         }
         return dishModel;
     }
@@ -172,8 +219,9 @@ public class MealService {
             dishRepository.deleteByIdMealAndIdDish(idMeal, idDish);
             baseModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
+            logger.error("There was an error removing the dish ({}) for meal ({}): ", idDish, idMeal, e);
             baseModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            baseModel.setMessage("There was an error removing dish: " + idDish);
+            baseModel.setMessage("There was an error removing the dish from the meal.");
         }
         return baseModel;
     }
@@ -183,7 +231,7 @@ public class MealService {
         try {
             Dish dish = dishRepository.findByIdMealAndIdDish(idMeal, dishModel.getIdDish());
             dish.setDishName(dishModel.getDishName());
-            dish.setIdDishType(dishModel.getIdDishType());
+            dish.setIdDishType(dishModel.getDishType().getDishTypeValue());
             dish.setIdRecipe(dishModel.getIdRecipe());
             dish.setOrderSequence(dishModel.getOrderSequence());
             dish.setUpdateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
@@ -193,10 +241,10 @@ public class MealService {
                 dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             }
         } catch (Exception e) {
+            logger.error("There was an error updating the dish for meal ({}): ", idMeal, e);
             dishModel.setIdDish(null);
             dishModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            dishModel.setMessage("There was an error updating dish");
-            //TODO:  LOGGER STATEMENT
+            dishModel.setMessage("There was an error updating the dish.");
         }
         return dishModel;
     }
@@ -217,8 +265,9 @@ public class MealService {
             }
             dishModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
         } catch (Exception e) {
+            logger.error("There was an error retrieving the dish ({}) for meal ({}): ", idDish, idMeal, e);
             dishModel.setModelStatusEnum(ModelStatusEnum.ERROR);
-            dishModel.setMessage("There was an error retrieving dish: " + idDish);
+            dishModel.setMessage("There was an error retrieving the dish.");
         }
         return dishModel;
     }
@@ -228,7 +277,6 @@ public class MealService {
         try {
             List<Dish> dishList = dishRepository.findByIdMealOrderByOrderSequenceDesc(idMeal);
             if (CollectionUtils.isNotEmpty(dishList)) {
-                //TODO:  Use Lambdas?
                 List<DishModel> dishModelList = new ArrayList<>();
                 for (Dish dish : dishList) {
                     DishModel dishModel = new DishModel();
@@ -236,7 +284,7 @@ public class MealService {
                     dishModel.setIdDish(dish.getIdDish());
                     dishModel.setIdRecipe(dish.getIdRecipe());
                     dishModel.setDishName(dish.getDishName());
-                    dishModel.setIdDishType(dish.getIdDishType());
+                    dishModel.setDishType(DishTypeEnum.get(dish.getIdDishType()));
                     dishModel.setOrderSequence(dish.getOrderSequence());
                     if (dish.getCreateTimestamp() != null) {
                         dishModel.setCreateTimestamp(DateTimeUtil.format(dish.getCreateTimestamp().toLocalDateTime()));
@@ -250,16 +298,18 @@ public class MealService {
                 dishListModel.setDishModelList(dishModelList);
                 dishListModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             } else {
-                //TODO:  HOW TO THROW NO DATA FOUND EXCEPTION
+                logger.error("There were no dishes found for meal ({}): ", idMeal);
                 dishListModel.setDishModelList(new ArrayList<>());
-                dishListModel.setMessage("There was an error retrieving dish list");
+                dishListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+                dishListModel.setMessage("There were no dishes found for this meal.");
             }
         } catch (Exception e) {
+            logger.error("There was an error retrieving the dishes for meal {}: ", idMeal, e);
             dishListModel.setDishModelList(new ArrayList<>());
-            dishListModel.setMessage("There was an error retrieving dish list");
-            //TODO:  LOGGER STATEMENT
+            dishListModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            dishListModel.setMessage("There was an error retrieving the dish list.");
         }
-
         return dishListModel;
     }
+
 }

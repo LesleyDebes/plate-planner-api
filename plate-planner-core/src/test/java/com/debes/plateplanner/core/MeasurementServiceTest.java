@@ -1,10 +1,8 @@
 package com.debes.plateplanner.core;
 
 import com.debes.plateplanner.models.enums.ModelStatusEnum;
-import com.debes.plateplanner.models.meal.MealModel;
-import com.debes.plateplanner.models.meal.MealTypeListModel;
+import com.debes.plateplanner.models.recipe.MeasurementListModel;
 import org.apache.commons.collections4.CollectionUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +21,15 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @ContextConfiguration("classpath:plate-planner-test-core.xml")
-public class MealServiceTest {
+public class MeasurementServiceTest {
     @Autowired
-    private MealService mealService;
+    private MeasurementService measurementService;
 
     @Test
-    @Ignore
-    public void test_getMeal() {
-        MealModel mealModel = mealService.getMeal(1);
-        assertNotNull(mealModel);
-        assertEquals(ModelStatusEnum.SUCCESS, mealModel.getModelStatusEnum());
-        assertEquals(1, mealModel.getIdMeal(), 0);
-    }
-
-    @Test
-    public void test_getMealTypeList() {
-        MealTypeListModel mealTypeListModel = mealService.getMealTypes();
-        assertNotNull(mealTypeListModel);
-        assertEquals(ModelStatusEnum.SUCCESS, mealTypeListModel.getModelStatusEnum());
-        assertEquals(3, CollectionUtils.size(mealTypeListModel.getMealTypeList()));
+    public void test_getMeasurements() {
+        MeasurementListModel measurementListModel = measurementService.getMeasurements();
+        assertNotNull(measurementListModel);
+        assertEquals(ModelStatusEnum.SUCCESS, measurementListModel.getModelStatusEnum());
+        assertEquals(12, CollectionUtils.size(measurementListModel.getMeasurementList()));
     }
 }

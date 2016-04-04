@@ -1,4 +1,4 @@
-package com.debes.plateplanner.dao.recipe;
+package com.debes.plateplanner.dao.measurement;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

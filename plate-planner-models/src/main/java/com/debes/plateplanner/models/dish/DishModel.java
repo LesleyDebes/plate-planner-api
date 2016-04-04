@@ -1,6 +1,7 @@
 package com.debes.plateplanner.models.dish;
 
 import com.debes.plateplanner.models.BaseModel;
+import com.debes.plateplanner.models.enums.DishTypeEnum;
 
 /**
  * @author lesley.debes
@@ -8,7 +9,7 @@ import com.debes.plateplanner.models.BaseModel;
 public class DishModel extends BaseModel {
     //TODO: ADD VALIDATION
     private Integer idDish;
-    private String idDishType;
+    private DishTypeEnum dishType;
     private String dishName;
     private Integer idMeal;
     private Integer idRecipe;
@@ -24,12 +25,12 @@ public class DishModel extends BaseModel {
         this.idDish = idDish;
     }
 
-    public String getIdDishType() {
-        return idDishType;
+    public DishTypeEnum getDishType() {
+        return dishType;
     }
 
-    public void setIdDishType(String idDishType) {
-        this.idDishType = idDishType;
+    public void setDishType(DishTypeEnum dishType) {
+        this.dishType = dishType;
     }
 
     public String getDishName() {

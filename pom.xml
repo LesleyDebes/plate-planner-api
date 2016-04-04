@@ -11,14 +11,14 @@
     <modules>
         <module>plate-planner-models</module>
         <module>plate-planner-core</module>
-        <module>plate-planner-services</module>
+        <module>plate-planner-service</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.debes.plateplanner</groupId>
-                <artifactId>plate-planner-services</artifactId>
+                <artifactId>plate-planner-service</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>

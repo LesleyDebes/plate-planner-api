@@ -1,15 +1,16 @@
 package com.debes.plateplanner.models.recipe;
 
 import com.debes.plateplanner.models.BaseModel;
+import com.debes.plateplanner.models.enums.MeasurementEnum;
 
 /**
  * @author lesley.debes
  */
-public class IngredientModel extends BaseModel {
+public class RecipeIngredientModel extends BaseModel {
     //TODO: ADD VALIDATION
     private Integer idRecipeIngredient;
     private String ingredientName;
-    private String idMeasurement;
+    private MeasurementEnum measurement;
     private String ingredientMeasurementAmount;
     private short orderSequence;
     private Integer idRecipe;
@@ -30,12 +31,12 @@ public class IngredientModel extends BaseModel {
         this.ingredientName = ingredientName;
     }
 
-    public String getIdMeasurement() {
-        return idMeasurement;
+    public MeasurementEnum getMeasurement() {
+        return measurement;
     }
 
-    public void setIdMeasurement(String idMeasurement) {
-        this.idMeasurement = idMeasurement;
+    public void setMeasurement(MeasurementEnum measurement) {
+        this.measurement = measurement;
     }
 
     public String getIngredientMeasurementAmount() {
