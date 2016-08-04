@@ -63,7 +63,7 @@ public class DishServiceTest {
         dishModel.setDishType(DishTypeEnum.ENTREE);
         dishModel.setIdRecipe(2);
         dishModel.setOrderSequence((short)2);
-        dishModel = dishService.updateDish(dishModel);
+        dishModel = dishService.updateDish(1, dishModel);
         assertNotNull(dishModel);
         assertEquals(ModelStatusEnum.SUCCESS, dishModel.getModelStatusEnum());
     }

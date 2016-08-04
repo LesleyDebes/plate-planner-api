@@ -124,18 +124,10 @@ public class MealService {
     }
 
     @Transactional
-    public MealModel upsertMeal(MealModel mealModel) {
+    public MealModel addMeal(MealModel mealModel) {
         try {
-            Meal meal;
-            if (mealModel.getIdMeal() == null) {
-                // Create a new meal record
-                meal = new Meal();
-                meal.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-            } else {
-                // Use the existing meal record
-                meal = mealRepository.findOne(mealModel.getIdMeal());
-                meal.setUpdateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-            }
+            Meal  meal = new Meal();
+            meal.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
             meal.setMealName(mealModel.getMealName());
             meal.setMealDate(mealModel.getMealDate());
             meal.setIdMealType(mealModel.getMealType().getMealTypeValue());
@@ -146,7 +138,32 @@ public class MealService {
                 mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
             }
         } catch (Exception e) {
-            logger.error("There was an error upserting the meal: ", e);
+            logger.error("There was an error adding the meal: ", e);
+            mealModel.setIdMeal(null);
+            mealModel.setModelStatusEnum(ModelStatusEnum.ERROR);
+            mealModel.setMessage("There was an error saving the meal.");
+        }
+        return mealModel;
+    }
+
+
+
+    @Transactional
+    public MealModel updateMeal(Integer idMeal, MealModel mealModel) {
+        try {
+            Meal meal = mealRepository.findOne(idMeal);
+            meal.setUpdateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+            meal.setMealName(mealModel.getMealName());
+            meal.setMealDate(mealModel.getMealDate());
+            meal.setIdMealType(mealModel.getMealType().getMealTypeValue());
+            meal.setOrderSequence(mealModel.getOrderSequence());
+            meal = mealRepository.save(meal);
+            if (meal != null && meal.getIdMeal() != null) {
+                mealModel.setIdMeal(meal.getIdMeal());
+                mealModel.setModelStatusEnum(ModelStatusEnum.SUCCESS);
+            }
+        } catch (Exception e) {
+            logger.error("There was an error updating the meal {}: ", idMeal, e);
             mealModel.setIdMeal(null);
             mealModel.setModelStatusEnum(ModelStatusEnum.ERROR);
             mealModel.setMessage("There was an error saving the meal.");

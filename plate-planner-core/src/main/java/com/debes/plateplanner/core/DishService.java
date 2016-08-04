@@ -106,9 +106,9 @@ public class DishService {
     }
 
     @Transactional
-    public DishModel updateDish(DishModel dishModel) {
+    public DishModel updateDish(Integer idDish, DishModel dishModel) {
         try {
-            Dish dish = dishRepository.findByIdMealAndIdDish(dishModel.getIdMeal(), dishModel.getIdDish());
+            Dish dish = dishRepository.findByIdMealAndIdDish(dishModel.getIdMeal(), idDish);
             if (StringUtils.isNotBlank(dishModel.getDishName())) {
                 dish.setDishName(dishModel.getDishName());
             }

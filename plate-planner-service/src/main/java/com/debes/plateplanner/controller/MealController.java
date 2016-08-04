@@ -1,5 +1,6 @@
 package com.debes.plateplanner.controller;
 
+import com.debes.plateplanner.core.DishService;
 import com.debes.plateplanner.core.MealService;
 import com.debes.plateplanner.models.BaseModel;
 import com.debes.plateplanner.models.dish.DishListModel;
@@ -18,12 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/meal")
 public class MealController {
+
     @Autowired
     private MealService mealService;
 
-    @RequestMapping(value = "/type/list", method = RequestMethod.GET)
-    public MealTypeListModel getMealTypes() {
-        return mealService.getMealTypes();
+    @Autowired
+    private DishService dishService;
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public MealModel createMeal(MealModel mealModel) {
+        return mealService.addMeal(mealModel);
     }
 
     @RequestMapping(value = "/{idMeal}", method = RequestMethod.GET)
@@ -31,16 +36,44 @@ public class MealController {
         return mealService.getMeal(idMeal);
     }
 
-    @RequestMapping(value = "/upsert", method = RequestMethod.POST)
-    public MealModel upsertMeal(MealModel mealModel) {
-        return mealService.upsertMeal(mealModel);
+    @RequestMapping(value = "/{idMeal}", method = RequestMethod.PUT)
+    public MealModel updateMeal(@PathVariable Integer idMeal, MealModel updatedMealModel) {
+        return mealService.updateMeal(idMeal, updatedMealModel);
     }
 
-    @RequestMapping(value = "/{idMeal}/remove", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{idMeal}", method = RequestMethod.DELETE)
     public BaseModel removeMeal(@PathVariable Integer idMeal) {
         return mealService.removeMeal(idMeal);
     }
 
+    @RequestMapping(value = "/type", method = RequestMethod.GET)
+    public MealTypeListModel getMealTypes() {
+        return mealService.getMealTypes();
+    }
 
+    @RequestMapping(value = "/{idMeal}/dish", method = RequestMethod.POST)
+    public DishModel createDish(DishModel dishModel) {
+        return dishService.addDish(dishModel);
+    }
+
+    @RequestMapping(value = "/{idMeal}/dish/{idDish}", method = RequestMethod.PUT)
+    public DishModel updateDish(@PathVariable Integer idDish, DishModel updatedDishModel) {
+        return dishService.updateDish(idDish, updatedDishModel);
+    }
+
+    @RequestMapping(value = "/{idMeal}/dish/{idDish}", method = RequestMethod.GET)
+    public DishModel getDish(@PathVariable Integer idMeal, @PathVariable Integer idDish) {
+        return dishService.getDish(idMeal, idDish);
+    }
+
+    @RequestMapping(value = "/{idMeal}/dish/{idDish}", method = RequestMethod.DELETE)
+    public BaseModel removeDish(@PathVariable Integer idMeal, @PathVariable Integer idDish) {
+        return dishService.removeDish(idMeal, idDish);
+    }
+
+    @RequestMapping(value = "/{idMeal}/dish", method = RequestMethod.GET)
+    public DishListModel getDishes(@PathVariable Integer idMeal) {
+        return dishService.getDishList(idMeal);
+    }
 
 }

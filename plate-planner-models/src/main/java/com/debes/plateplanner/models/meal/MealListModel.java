@@ -8,8 +8,7 @@ import java.util.List;
  * @author lesley.debes
  */
 public class MealListModel extends BaseModel {
-    //TODO:  ADD VALIDATION
-    List<MealModel> mealList;
+    private List<MealModel> mealList;
 
     public List<MealModel> getMealList() {
         return mealList;

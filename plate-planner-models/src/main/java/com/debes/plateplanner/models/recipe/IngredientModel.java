@@ -6,21 +6,20 @@ import com.debes.plateplanner.models.enums.MeasurementEnum;
 /**
  * @author lesley.debes
  */
-public class RecipeIngredientModel extends BaseModel {
+public class IngredientModel extends BaseModel {
     //TODO: ADD VALIDATION
-    private Integer idRecipeIngredient;
+    private Integer idIngredient;
     private String ingredientName;
     private MeasurementEnum measurement;
     private String ingredientMeasurementAmount;
     private short orderSequence;
-    private Integer idRecipe;
 
-    public Integer getIdRecipeIngredient() {
-        return idRecipeIngredient;
+    public Integer getIdIngredient() {
+        return idIngredient;
     }
 
-    public void setIdRecipeIngredient(Integer idRecipeIngredient) {
-        this.idRecipeIngredient = idRecipeIngredient;
+    public void setIdIngredient(Integer idIngredient) {
+        this.idIngredient = idIngredient;
     }
 
     public String getIngredientName() {
@@ -55,11 +54,4 @@ public class RecipeIngredientModel extends BaseModel {
         this.orderSequence = orderSequence;
     }
 
-    public Integer getIdRecipe() {
-        return idRecipe;
-    }
-
-    public void setIdRecipe(Integer idRecipe) {
-        this.idRecipe = idRecipe;
-    }
 }

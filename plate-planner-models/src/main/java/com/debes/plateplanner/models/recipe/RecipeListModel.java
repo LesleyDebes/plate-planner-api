@@ -8,7 +8,7 @@ import java.util.List;
  * @author lesley.debes
  */
 public class RecipeListModel extends BaseModel {
-    public List<RecipeModel> recipeModelList;
+    private List<RecipeModel> recipeModelList;
 
     public List<RecipeModel> getRecipeModelList() {
         return recipeModelList;

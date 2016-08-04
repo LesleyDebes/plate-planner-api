@@ -40,11 +40,11 @@ public class RecipeServiceTest {
 
     @Test
     @Transactional
-    public void test_upsertRecipe() {
+    public void test_createRecipe_updateRecipe() {
         RecipeModel recipeModel = new RecipeModel();
         recipeModel.setRecipeName("Lasagna");
         recipeModel.setRecipeSource("Epicurious.com");
-        recipeModel = recipeService.upsertRecipe(recipeModel);
+        recipeModel = recipeService.createRecipe(recipeModel);
         assertNotNull(recipeModel);
         assertNotNull(recipeModel.getIdRecipe());
         assertEquals(ModelStatusEnum.SUCCESS, recipeModel.getModelStatusEnum());
@@ -60,7 +60,7 @@ public class RecipeServiceTest {
         recipeModel.setIdRecipe(savedRecipeID);
         recipeModel.setRecipeName("Best Lasagna");
         recipeModel.setRecipeSource("Epicurious");
-        recipeModel = recipeService.upsertRecipe(recipeModel);
+        recipeModel = recipeService.updateRecipe(savedRecipeID, recipeModel);
         assertNotNull(recipeModel);
         assertNotNull(recipeModel.getIdRecipe());
         assertEquals(ModelStatusEnum.SUCCESS, recipeModel.getModelStatusEnum());
@@ -89,23 +89,23 @@ public class RecipeServiceTest {
     @Test
     @Transactional
     public void test_addIngredient_and_updateIngredient_and_removeIngredient() {
-        RecipeIngredientModel recipeIngredientModel = new RecipeIngredientModel();
-        recipeIngredientModel.setOrderSequence((short)2);
-        recipeIngredientModel.setIngredientMeasurementAmount("1");
-        recipeIngredientModel.setMeasurement(MeasurementEnum.BOX);
-        recipeIngredientModel.setIngredientName("lasagna noodles");
-        recipeIngredientModel.setIdRecipe(3);
-        recipeIngredientModel = recipeService.addIngredient(recipeIngredientModel);
-        assertNotNull(recipeIngredientModel);
-        assertTrue(recipeIngredientModel.getModelStatusEnum().isSuccessful());
-        assertNotNull(recipeIngredientModel.getIdRecipeIngredient());
+        IngredientModel ingredientModel = new IngredientModel();
+        ingredientModel.setOrderSequence((short)2);
+        ingredientModel.setIngredientMeasurementAmount("1");
+        ingredientModel.setMeasurement(MeasurementEnum.BOX);
+        ingredientModel.setIngredientName("lasagna noodles");
+        ingredientModel = recipeService.addIngredient(3, ingredientModel);
+        assertNotNull(ingredientModel);
+        assertTrue(ingredientModel.getModelStatusEnum().isSuccessful());
+        assertNotNull(ingredientModel.getIdIngredient());
 
-        recipeIngredientModel.setIngredientMeasurementAmount(".25");
-        RecipeIngredientModel updatedRecipeIngredientModel = recipeService.updateIngredient(recipeIngredientModel);
-        assertNotNull(updatedRecipeIngredientModel);
-        assertTrue(updatedRecipeIngredientModel.getModelStatusEnum().isSuccessful());
+        ingredientModel.setIngredientMeasurementAmount(".25");
+        IngredientModel updatedIngredientModel = recipeService.updateIngredient(3, ingredientModel.getIdIngredient(),
+                                                                                ingredientModel);
+        assertNotNull(updatedIngredientModel);
+        assertTrue(updatedIngredientModel.getModelStatusEnum().isSuccessful());
 
-        BaseModel baseModel = recipeService.removeIngredient(3, updatedRecipeIngredientModel.getIdRecipeIngredient());
+        BaseModel baseModel = recipeService.removeIngredient(3, updatedIngredientModel.getIdIngredient());
         assertNotNull(baseModel);
         assertTrue(baseModel.getModelStatusEnum().isSuccessful());
     }
@@ -120,39 +120,11 @@ public class RecipeServiceTest {
 
     @Test
     public void test_getRecipeIngredientList() {
-        RecipeIngredientListModel recipeIngredientListModel = recipeService.getRecipeIngredientList(3);
+        IngredientListModel recipeIngredientListModel = recipeService.getRecipeIngredientList(3);
         assertNotNull(recipeIngredientListModel);
         assertTrue(CollectionUtils.isNotEmpty(recipeIngredientListModel.getIngredientModelList()));
         assertTrue(recipeIngredientListModel.getModelStatusEnum().isSuccessful());
-        assertTrue(recipeIngredientListModel.getIngredientModelList()
-                .stream()
-                .allMatch(i -> i.getModelStatusEnum().isSuccessful()));
+        assertTrue(recipeIngredientListModel.getIngredientModelList().stream().allMatch(i -> i.getModelStatusEnum().isSuccessful()));
     }
-
-   /* @Test
-    public void test_getRecipeCategoryList() {
-        RecipeCategoryListModel recipeCategoryList = recipeService.getRecipeCategoryList();
-        assertNotNull(recipeCategoryList);
-        assertEquals(ModelStatusEnum.SUCCESS, recipeCategoryList.getModelStatusEnum());
-        assertEquals(4, CollectionUtils.size(recipeCategoryList.getRecipeCategoryList()));
-        assertTrue(recipeCategoryList.getRecipeCategoryList().stream().allMatch(category -> category
-                .getModelStatusEnum().isSuccessful()));
-    }
-
-    @Test
-    @Transactional
-    public void test_addRecipeCategory() {
-        BaseModel baseModel = recipeService.addRecipeCategory(3, 1);
-        assertNotNull(baseModel);
-        assertTrue(baseModel.getModelStatusEnum().isSuccessful());
-    }
-
-    @Test
-    @Transactional
-    public void test_removeRecipeCategory() {
-        BaseModel baseModel = recipeService.removeRecipeCategory(3, 1);
-        assertNotNull(baseModel);
-        assertTrue(baseModel.getModelStatusEnum().isSuccessful());
-    }*/
 
 }

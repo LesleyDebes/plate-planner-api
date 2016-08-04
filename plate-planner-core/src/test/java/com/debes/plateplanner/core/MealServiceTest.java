@@ -34,7 +34,7 @@ public class MealServiceTest {
 
     @Test
     @Transactional
-    public void test_upsertMeal_Success() {
+    public void test_addMeal_updateMeal_Success() {
         MealModel mealModel = new MealModel();
         mealModel.setMealName("Breakfast - Wednesday");
         LocalDate localDate = LocalDate.of(2016, 4, 5);
@@ -42,14 +42,14 @@ public class MealServiceTest {
         mealModel.setMealType(MealTypeEnum.BREAKFAST);
         mealModel.setOrderSequence((short)1);
 
-        mealModel = mealService.upsertMeal(mealModel);
+        mealModel = mealService.addMeal(mealModel);
         assertNotNull(mealModel);
         assertEquals(ModelStatusEnum.SUCCESS, mealModel.getModelStatusEnum());
         assertNotNull(mealModel.getIdMeal());
 
         Integer idMeal = mealModel.getIdMeal();
         mealModel.setMealName("Breakfast: Wednesday");
-        mealModel = mealService.upsertMeal(mealModel);
+        mealModel = mealService.updateMeal(idMeal, mealModel);
         assertNotNull(mealModel);
         assertEquals(ModelStatusEnum.SUCCESS, mealModel.getModelStatusEnum());
         assertNotNull(mealModel.getIdMeal());

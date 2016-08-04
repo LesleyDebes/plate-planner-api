@@ -6,6 +6,7 @@ import com.debes.plateplanner.models.enums.DishTypeEnum;
  * @author lesley.debes
  */
 public class DishTypeModel {
+    //TODO:  VALIDATION
     private DishTypeEnum dishType;
     private String dishTypeDescription;
 

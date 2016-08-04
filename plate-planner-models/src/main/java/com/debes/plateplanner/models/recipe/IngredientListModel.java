@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * @author lesley.debes
  */
-public class RecipeIngredientListModel extends BaseModel {
-    //TODO:  ADD VALIDATION
+public class IngredientListModel extends BaseModel {
+    //TODO: ADD VALIDATION
     private Integer idRecipe;
-    private List<RecipeIngredientModel> ingredientModelList;
+    private List<IngredientModel> ingredientModelList;
 
     public Integer getIdRecipe() {
         return idRecipe;
@@ -20,11 +20,11 @@ public class RecipeIngredientListModel extends BaseModel {
         this.idRecipe = idRecipe;
     }
 
-    public List<RecipeIngredientModel> getIngredientModelList() {
+    public List<IngredientModel> getIngredientModelList() {
         return ingredientModelList;
     }
 
-    public void setIngredientModelList(List<RecipeIngredientModel> ingredientModelList) {
+    public void setIngredientModelList(List<IngredientModel> ingredientModelList) {
         this.ingredientModelList = ingredientModelList;
     }
 }

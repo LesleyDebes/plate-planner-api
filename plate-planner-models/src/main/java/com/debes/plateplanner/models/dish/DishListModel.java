@@ -8,7 +8,7 @@ import java.util.List;
  * @author lesley.debes
  */
 public class DishListModel extends BaseModel {
-    List<DishModel> dishModelList;
+    private List<DishModel> dishModelList;
 
     public List<DishModel> getDishModelList() {
         return dishModelList;

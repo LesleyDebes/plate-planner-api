@@ -8,8 +8,7 @@ import java.util.List;
  * @author lesley.debes
  */
 public class MeasurementListModel extends BaseModel {
-    //TODO:  ADD VALIDATION
-    List<MeasurementModel> measurementList;
+    private List<MeasurementModel> measurementList;
 
     public List<MeasurementModel> getMeasurementList() {
         return measurementList;

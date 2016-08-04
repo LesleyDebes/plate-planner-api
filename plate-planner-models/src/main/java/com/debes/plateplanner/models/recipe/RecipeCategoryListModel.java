@@ -8,7 +8,6 @@ import java.util.List;
  * @author lesley.debes
  */
 public class RecipeCategoryListModel extends BaseModel {
-    //TODO:  ADD VALIDATION
     private List<RecipeCategoryModel> recipeCategoryList;
 
     public List<RecipeCategoryModel> getRecipeCategoryList() {

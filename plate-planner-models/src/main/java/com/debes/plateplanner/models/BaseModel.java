@@ -6,9 +6,8 @@ import com.debes.plateplanner.models.enums.ModelStatusEnum;
  * @author lesley.debes
  */
 public class BaseModel {
-    //TODO: ADD VALIDATION
-    public ModelStatusEnum modelStatusEnum = ModelStatusEnum.ERROR;
-    public String message;
+    private ModelStatusEnum modelStatusEnum = ModelStatusEnum.ERROR;
+    private String message;
 
     public ModelStatusEnum getModelStatusEnum() {
         return modelStatusEnum;
